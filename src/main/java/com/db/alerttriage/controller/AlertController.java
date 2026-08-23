@@ -8,10 +8,9 @@ import com.db.alerttriage.alert.service.AlertService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/alerts")
@@ -37,6 +36,17 @@ public class AlertController {
 
         return ResponseEntity.ok(response);
 
+
+    };
+
+    @GetMapping
+    public ResponseEntity<List<AlertResponse>> getAlerts(){
+    List<AlertResponse> responses = alertService.getAlerts()
+            .stream()
+            .map(this::toResponse)
+            .toList();
+
+    return ResponseEntity.ok(responses);
 
     };
 

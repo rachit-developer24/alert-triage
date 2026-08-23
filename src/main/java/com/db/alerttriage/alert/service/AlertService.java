@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -55,6 +56,10 @@ public class AlertService {
         return new  CreateAlertResult(savedAlert,
                true );
 
+     };
+
+     public List<Alert> getAlerts(){
+      return alertRepository.findAllByOrderByReceivedAtDesc();
      };
 
 
