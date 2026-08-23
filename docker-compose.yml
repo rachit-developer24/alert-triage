@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: alert-triage-postgres
+
+    environment:
+      POSTGRES_DB: alerts
+      POSTGRES_USER: alertuser
+      POSTGRES_PASSWORD: alertpassword
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
