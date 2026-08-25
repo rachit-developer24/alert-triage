@@ -33,10 +33,7 @@ public class AlertController {
     return ResponseEntity.status(HttpStatus.CREATED)
             .body(response);
         }
-
         return ResponseEntity.ok(response);
-
-
     };
 
     @GetMapping

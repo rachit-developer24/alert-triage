@@ -19,4 +19,6 @@ public class AlertWriter {
     public Alert save(Alert alert){
        return alertRepository.saveAndFlush(alert);
     };
+
+
 }
