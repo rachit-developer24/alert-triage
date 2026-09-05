@@ -13,7 +13,6 @@ public record AlertResponse(
         String hostname,
         BigDecimal cvssScore,
         Severity severity,
-        String environment,
         String description,
         Instant detectedAt,
         Instant receivedAt,

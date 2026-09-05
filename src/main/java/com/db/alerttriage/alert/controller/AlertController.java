@@ -1,4 +1,4 @@
-package com.db.alerttriage.controller;
+package com.db.alerttriage.alert.controller;
 
 import com.db.alerttriage.alert.dto.AlertResponse;
 import com.db.alerttriage.alert.dto.CreateAlertRequest;
@@ -55,7 +55,6 @@ public class AlertController {
                 alert.getHostname(),
                 alert.getCvssScore(),
                 alert.getSeverity(),
-                alert.getEnvironment(),
                 alert.getDescription(),
                 alert.getDetectedAt(),
                 alert.getReceivedAt(),

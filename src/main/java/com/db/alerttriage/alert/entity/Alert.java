@@ -28,9 +28,6 @@ public class Alert {
     @Column(name = "severity", nullable = false)
     private Severity severity;
 
-    @Column(name = "environment")
-    private String environment;
-
     @Column(name = "description", nullable = false)
     private String description;
 
@@ -53,7 +50,6 @@ public class Alert {
             String hostname,
             BigDecimal cvssScore,
             Severity severity,
-            String environment,
             String description,
             Instant detectedAt,
             Instant receivedAt,
@@ -64,7 +60,6 @@ public class Alert {
         this.hostname = hostname;
         this.cvssScore = cvssScore;
         this.severity = severity;
-        this.environment = environment;
         this.description = description;
         this.detectedAt = detectedAt;
         this.receivedAt = receivedAt;
@@ -93,10 +88,6 @@ public class Alert {
 
     public Severity getSeverity() {
         return severity;
-    }
-
-    public String getEnvironment() {
-        return environment;
     }
 
     public String getDescription() {

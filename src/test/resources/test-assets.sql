@@ -1,0 +1,72 @@
+INSERT INTO assets (
+    hostname,
+    ip_address,
+    environment,
+    internet_exposed,
+    business_criticality,
+    device_type,
+    vendor,
+    model,
+    installed_version,
+    owner_team,
+    site,
+    last_seen_at
+)
+VALUES
+(
+    'router-api-01',
+    '10.0.0.1',
+    'DEV',
+    false,
+    'MEDIUM',
+    'ROUTER',
+    'Cisco',
+    'Test-Router',
+    '1.0.0',
+    'Test Network Team',
+    'London',
+    NOW()
+),
+(
+    'router-api-03',
+    '10.0.0.3',
+    'DEV',
+    false,
+    'MEDIUM',
+    'ROUTER',
+    'Cisco',
+    'Test-Router',
+    '1.0.0',
+    'Test Network Team',
+    'London',
+    NOW()
+),
+(
+    'router-api-04',
+    '10.0.0.4',
+    'DEV',
+    false,
+    'MEDIUM',
+    'ROUTER',
+    'Cisco',
+    'Test-Router',
+    '1.0.0',
+    'Test Network Team',
+    'London',
+    NOW()
+),
+(
+    'router-race-01',
+    '10.0.0.50',
+    'DEV',
+    false,
+    'MEDIUM',
+    'ROUTER',
+    'Cisco',
+    'Test-Router',
+    '1.0.0',
+    'Test Network Team',
+    'London',
+    NOW()
+)
+ON CONFLICT (hostname) DO NOTHING;

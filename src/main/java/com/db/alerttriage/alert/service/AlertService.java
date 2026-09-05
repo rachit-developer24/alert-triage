@@ -6,6 +6,9 @@ import com.db.alerttriage.alert.entity.Alert;
 import com.db.alerttriage.alert.entity.AlertStatus;
 import com.db.alerttriage.alert.entity.Severity;
 import com.db.alerttriage.alert.repository.AlertRepository;
+import com.db.alerttriage.triage.model.AdvisoryFacts;
+import com.db.alerttriage.triage.model.TriageDecision;
+import com.db.alerttriage.triage.service.TriageService;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,14 +31,17 @@ public class AlertService {
             "uq_active_alert_cve_hostname";
 
     private final AlertRepository alertRepository;
+    private final TriageService triageService;
     private final AlertWriter alertWriter;
 
     public AlertService(
             AlertRepository alertRepository,
+            TriageService triageService,
             AlertWriter alertWriter
     ) {
         this.alertRepository = alertRepository;
         this.alertWriter = alertWriter;
+        this.triageService = triageService;
     }
 
     public CreateAlertResult createAlert(CreateAlertRequest request) {
@@ -63,7 +69,6 @@ public class AlertService {
                 request.hostname(),
                 request.cvssScore(),
                 severity,
-                null, // TODO: enrich from inventory/CMDB
                 request.description(),
                 request.detectedAt(),
                 Instant.now(),
@@ -73,6 +78,8 @@ public class AlertService {
         try {
 
             Alert savedAlert = alertWriter.save(alert);
+            TriageDecision decision =
+                    triageService.triage(savedAlert);
 
             return new CreateAlertResult(
                     savedAlert,
