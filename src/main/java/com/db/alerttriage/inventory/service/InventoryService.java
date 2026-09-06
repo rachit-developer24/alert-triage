@@ -1,6 +1,6 @@
 package com.db.alerttriage.inventory.service;
 
-import com.db.alerttriage.inventory.Repository.AssetRepository;
+import com.db.alerttriage.inventory.repository.AssetRepository;
 import com.db.alerttriage.inventory.entity.Asset;
 import com.db.alerttriage.inventory.mapper.AssetMapper;
 import com.db.alerttriage.inventory.model.AssetFacts;

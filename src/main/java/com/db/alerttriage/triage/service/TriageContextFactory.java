@@ -4,7 +4,7 @@ import com.db.alerttriage.alert.entity.Alert;
 import com.db.alerttriage.inventory.model.AssetFacts;
 import com.db.alerttriage.inventory.service.InventoryService;
 import com.db.alerttriage.triage.model.TriageContext;
-import com.db.alerttriage.vulnerability.Service.VulnerabilityService;
+import com.db.alerttriage.vulnerability.service.VulnerabilityService;
 import com.db.alerttriage.vulnerability.model.VulnerabilityAdvisory;
 import org.springframework.stereotype.Service;
 

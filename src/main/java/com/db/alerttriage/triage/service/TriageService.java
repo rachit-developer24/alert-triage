@@ -70,17 +70,20 @@ public class TriageService {
                         context.vulnerabilityAdvisory().advisoryText()
                 );
 
+        TriageDecision decision;
+
         if (!valid) {
-            throw new IllegalStateException(
+            decision = new TriageDecision(
+                    TriageAction.REVIEW,
                     "AI evidence validation failed"
+            );
+        } else {
+            decision = triageDecisionService.decide(
+                    alert,
+                    facts
             );
         }
 
-        TriageDecision decision =
-                triageDecisionService.decide(
-                        alert,
-                        facts
-                );
 
         AssetFacts asset = context.assetFacts();
 
