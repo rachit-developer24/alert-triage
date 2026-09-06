@@ -7,6 +7,8 @@ import com.db.alerttriage.triage.model.TriageDecision;
 import com.db.alerttriage.triage.repository.TriageDecisionRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 
 @Service
 public class TriageDecisionService {
@@ -17,7 +19,7 @@ public class TriageDecisionService {
 
     ) {
 
-        if (alert.getCvssScore().doubleValue() >= 9.0) {
+        if (alert.getCvssScore().compareTo(new BigDecimal("9.0")) >= 0) {
             return new TriageDecision(
                     TriageAction.ESCALATE,
                     "Critical CVSS score"

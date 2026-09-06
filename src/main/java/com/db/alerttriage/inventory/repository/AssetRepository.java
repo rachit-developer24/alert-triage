@@ -1,4 +1,4 @@
-package com.db.alerttriage.inventory.Repository;
+package com.db.alerttriage.inventory.repository;
 
 import com.db.alerttriage.inventory.entity.Asset;
 import org.springframework.data.jpa.repository.JpaRepository;
