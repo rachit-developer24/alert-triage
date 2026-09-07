@@ -1,10 +1,12 @@
 package com.db.alerttriage.triage.controller;
 
 import com.db.alerttriage.triage.dto.ReviewTriageRequest;
+import com.db.alerttriage.triage.model.TriageDecisionResponse;
 import com.db.alerttriage.triage.service.TriageReviewService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/api/alerts/{alertId}/triage")
