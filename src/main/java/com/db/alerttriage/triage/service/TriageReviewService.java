@@ -1,11 +1,15 @@
 package com.db.alerttriage.triage.service;
 
+import com.db.alerttriage.alert.entity.Alert;
 import com.db.alerttriage.triage.entity.TriageDecisionEntity;
+import com.db.alerttriage.triage.model.ReviewStatus;
+import com.db.alerttriage.triage.model.TriageDecisionResponse;
 import com.db.alerttriage.triage.repository.TriageDecisionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 
 @Service
 public class TriageReviewService {
@@ -56,4 +60,36 @@ public class TriageReviewService {
                         )
                 );
     }
+
+    @Transactional(readOnly = true)
+    public List<TriageDecisionResponse> getPendingDecisions() {
+
+        return triageDecisionRepository
+                .findByReviewStatusOrderByDecidedAtDesc(
+                        ReviewStatus.PENDING
+                )
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+    private TriageDecisionResponse toResponse(
+            TriageDecisionEntity entity
+    ) {
+
+        Alert alert = entity.getAlert();
+
+        return new TriageDecisionResponse(
+                alert.getId(),
+                alert.getCveId(),
+                alert.getHostname(),
+                alert.getCvssScore(),
+                alert.getSeverity(),
+
+                entity.getAction(),
+                entity.getReason(),
+                entity.getReviewStatus(),
+                entity.getDecidedAt()
+        );
+    }
+
 }

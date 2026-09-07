@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Alert Triage Review</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background: #f5f5f5;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        .decision {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .severity {
+            font-weight: bold;
+        }
+
+        .CRITICAL {
+            color: darkred;
+        }
+
+        .HIGH {
+            color: darkorange;
+        }
+
+        .MEDIUM {
+            color: goldenrod;
+        }
+
+        .LOW {
+            color: green;
+        }
+
+        button {
+            padding: 8px 16px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        textarea {
+            width: 100%;
+            margin: 10px 0;
+            padding: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Pending Triage Decisions</h1>
+
+<div id="decisions">
+    Loading...
+</div>
+
+<script>
+
+    async function loadDecisions() {
+
+        const response =
+            await fetch("/api/triage-decisions/pending");
+
+        const decisions =
+            await response.json();
+
+        const container =
+            document.getElementById("decisions");
+
+        container.innerHTML = "";
+
+        if (decisions.length === 0) {
+            container.innerHTML =
+                "<p>No pending decisions.</p>";
+            return;
+        }
+
+        decisions.forEach(decision => {
+
+            const card =
+                document.createElement("div");
+
+            card.className = "decision";
+
+            card.innerHTML = `
+                <h2>${decision.cveId}</h2>
+
+                <p>
+                    <strong>Host:</strong>
+                    ${decision.hostname}
+                </p>
+
+                <p>
+                    <strong>CVSS:</strong>
+                    ${decision.cvssScore}
+                </p>
+
+                <p>
+                    <strong>Severity:</strong>
+                    <span class="severity ${decision.severity}">
+                        ${decision.severity}
+                    </span>
+                </p>
+
+                <p>
+                    <strong>Decision:</strong>
+                    ${decision.action}
+                </p>
+
+                <p>
+                    <strong>Reason:</strong>
+                    ${decision.reason}
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+                    ${decision.reviewStatus}
+                </p>
+
+                <textarea
+                    id="comment-${decision.alertId}"
+                    placeholder="Review comment">
+                </textarea>
+
+                <button
+                    onclick="review(
+                        ${decision.alertId},
+                        'approve'
+                    )">
+                    Approve
+                </button>
+
+                <button
+                    onclick="review(
+                        ${decision.alertId},
+                        'reject'
+                    )">
+                    Reject
+                </button>
+            `;
+
+            container.appendChild(card);
+        });
+    }
+
+
+    async function review(alertId, action) {
+
+        const comment =
+            document.getElementById(
+                `comment-${alertId}`
+            ).value;
+
+        const response =
+            await fetch(
+                `/api/alerts/${alertId}/triage/${action}`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        reviewedBy: "demo-reviewer",
+                        comment: comment
+                    })
+                }
+            );
+
+        if (response.ok) {
+            await loadDecisions();
+        } else {
+            alert("Review failed");
+        }
+    }
+
+
+    loadDecisions();
+
+</script>
+
+</body>
+</html>
