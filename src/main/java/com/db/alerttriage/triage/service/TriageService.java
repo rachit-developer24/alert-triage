@@ -60,27 +60,45 @@ public class TriageService {
                         context.vulnerabilityAdvisory().advisoryText()
                 );
 
-        AdvisoryFacts facts =
-                triageModel.interpret(modelRequest);
-
-
-        boolean valid =
-                factsValidator.isValid(
-                        facts,
-                        context.vulnerabilityAdvisory().advisoryText()
-                );
-
+        AdvisoryFacts facts;
         TriageDecision decision;
 
-        if (!valid) {
+        try {
+            facts = triageModel.interpret(modelRequest);
+
+            if (facts == null) {
+                decision = new TriageDecision(
+                        TriageAction.REVIEW,
+                        "AI model returned no result - manual review required"
+                );
+            } else {
+
+                boolean valid =
+                        factsValidator.isValid(
+                                facts,
+                                context.vulnerabilityAdvisory().advisoryText()
+                        );
+
+                if (!valid) {
+                    decision = new TriageDecision(
+                            TriageAction.REVIEW,
+                            "AI evidence validation failed"
+                    );
+                } else {
+                    decision = triageDecisionService.decide(
+                            alert,
+                            facts
+                    );
+                }
+            }
+
+        } catch (RuntimeException ex) {
+
+            facts = null;
+
             decision = new TriageDecision(
                     TriageAction.REVIEW,
-                    "AI evidence validation failed"
-            );
-        } else {
-            decision = triageDecisionService.decide(
-                    alert,
-                    facts
+                    "AI model unavailable - manual review required"
             );
         }
 
@@ -101,9 +119,9 @@ public class TriageService {
                         asset.vendor(),
                         asset.model(),
 
-                        facts.affectedVersionRange(),
-                        facts.fixedVersion(),
-                        facts.remediationSummary(),
+                        facts == null ? null : facts.affectedVersionRange(),
+                        facts == null ? null : facts.fixedVersion(),
+                        facts == null ? null : facts.remediationSummary(),
 
                         Instant.now()
                 );
